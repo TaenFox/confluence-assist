@@ -82,3 +82,23 @@ def get_code_word(text):
 root_dir = '.'  # Корневая директория для экспорта
 export_page_to_md(page_id, root_dir)
 '''
+
+'''
+# Поставить лейбл на всех страницах под страницей
+
+def mass_update_label(page_id:str, label:str):
+    page = confluence.get_page_by_id(page_id)
+    try:
+        print(f"Страница ID: {page['id']} - {page['title']}")
+        result = confluence.set_page_label(page['id'], label)
+        for piece in result['results']:
+            print(piece)
+    except Exception as e:
+        print(f"Ошибка при установке метки на странице {page['id']}: {str(e)}")
+    child_pages = confluence.get_child_pages(page_id)
+    for child in child_pages:
+        mass_update_label(child['id'], label)
+
+page_id = "1249116312"
+mass_update_label(page_id, "основная-документация")
+'''
